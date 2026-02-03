@@ -1,0 +1,10 @@
+# HTTPS local for Veridoc (Tatchi/WebAuthn requires secure context).
+# Run: caddy trust   (once, to trust local CA)
+# Then: caddy run --config Caddyfile --adapter caddyfile
+# Open: https://veridoc.localhost
+
+veridoc.localhost {
+  tls internal
+  encode gzip
+  reverse_proxy localhost:3000
+}
