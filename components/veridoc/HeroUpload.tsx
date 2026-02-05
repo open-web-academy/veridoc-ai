@@ -71,10 +71,10 @@ export const HeroUpload = () => {
   };
 
   return (
-    <div className="grid gap-3">
+    <div className="grid gap-2 sm:gap-3">
       <div
         id="hero-upload"
-        className={`rounded-3xl border border-dashed px-6 py-6 text-center transition ${
+        className={`min-h-[140px] rounded-2xl border-2 border-dashed px-4 py-5 text-center transition sm:min-h-0 sm:rounded-3xl sm:px-6 sm:py-6 ${
           isDragging
             ? "border-teal-400 bg-teal-50/60"
             : "border-slate-200 bg-white/80"
@@ -93,18 +93,18 @@ export const HeroUpload = () => {
           onChange={handleInputChange}
           className="hidden"
         />
-        <p className="text-sm font-semibold text-slate-800">
+        <p className="text-sm font-semibold text-slate-800 sm:text-sm">
           Drag and drop your lab file
         </p>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-1 text-xs text-slate-500 sm:mt-2">
           PDF, PNG, JPG, JPEG. Max {formatBytes(MAX_FILE_BYTES)}.
         </p>
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="mt-4 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900"
+          className="mt-3 min-h-[44px] rounded-full border border-slate-200 bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98] sm:mt-4 sm:min-h-0 sm:border-slate-200 sm:bg-white sm:px-4 sm:py-2 sm:text-xs sm:font-semibold sm:text-slate-700 sm:hover:border-slate-300 sm:hover:bg-white sm:hover:text-slate-900"
         >
-          Browse files
+          Choose file
         </button>
       </div>
 

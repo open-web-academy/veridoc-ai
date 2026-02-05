@@ -22,7 +22,16 @@ function toUserMessage(raw: string | undefined): string {
   return raw;
 }
 
-export function HomeLogin() {
+type HomeLoginVariant = "inline" | "stacked";
+
+export function HomeLogin({
+  variant = "inline",
+  showHelpInHeader = true,
+}: {
+  variant?: HomeLoginVariant;
+  /** When false (e.g. in header), hide "No account yet" and error so layout stays one row */
+  showHelpInHeader?: boolean;
+}) {
   const {
     loginState,
     registerPasskey,
@@ -91,9 +100,13 @@ export function HomeLogin() {
     logout();
   }, [logout]);
 
+  const isStacked = variant === "stacked";
+
   if (!walletIframeConnected) {
     return (
-      <div className="flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-3 py-2 text-sm text-slate-500">
+      <div
+        className={`flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-3 py-2 text-sm text-slate-500 ${isStacked ? "w-full justify-center" : ""}`}
+      >
         <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-amber-400" />
         Connecting…
       </div>
@@ -102,14 +115,18 @@ export function HomeLogin() {
 
   if (loginState.isLoggedIn && loginState.nearAccountId) {
     return (
-      <div className="flex items-center gap-3">
-        <span className="max-w-[140px] truncate rounded-full bg-white/80 px-3 py-2 text-xs font-medium text-slate-600 ring-1 ring-slate-200/70 sm:max-w-[200px]">
+      <div
+        className={`flex items-center gap-3 ${isStacked ? "w-full flex-col" : ""}`}
+      >
+        <span
+          className={`max-w-[140px] truncate rounded-full bg-white/80 px-3 py-2 text-xs font-medium text-slate-600 ring-1 ring-slate-200/70 sm:max-w-[200px] ${isStacked ? "w-full max-w-none text-center" : ""}`}
+        >
           {loginState.nearAccountId}
         </span>
         <button
           type="button"
           onClick={handleLogout}
-          className="rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
+          className={`rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-900 ${isStacked ? "w-full min-h-[44px]" : ""}`}
         >
           Sign out
         </button>
@@ -117,14 +134,24 @@ export function HomeLogin() {
     );
   }
 
+  const showHelp = showHelpInHeader || isStacked;
+
   return (
-    <div className="flex flex-col items-end gap-2">
-      <div className="flex flex-wrap items-center gap-2">
+    <div
+      className={
+        isStacked
+          ? "flex w-full flex-col items-stretch gap-2"
+          : "flex flex-col items-end gap-1"
+      }
+    >
+      <div
+        className={`flex shrink-0 gap-2 ${isStacked ? "flex-col" : "flex-row flex-nowrap items-center"}`}
+      >
         <button
           type="button"
           onClick={handleLogin}
           disabled={busy}
-          className="rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-900 disabled:opacity-50"
+          className={`rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-900 disabled:opacity-50 ${isStacked ? "min-h-[44px] w-full" : ""}`}
         >
           {busy ? "…" : "Sign in"}
         </button>
@@ -132,18 +159,23 @@ export function HomeLogin() {
           type="button"
           onClick={handleRegister}
           disabled={busy}
-          className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
+          className={`rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50 ${isStacked ? "min-h-[44px] w-full" : ""}`}
         >
           {busy ? "…" : "Create account"}
         </button>
       </div>
-      {accountInputState.indexDBAccounts?.length === 0 && (
-        <p className="text-right text-xs text-slate-500">
+      {showHelp && accountInputState.indexDBAccounts?.length === 0 && (
+        <p
+          className={`text-xs text-slate-500 ${isStacked ? "text-center" : "text-right"}`}
+        >
           No account yet. Click &quot;Create account&quot; to use passkey.
         </p>
       )}
-      {error && (
-        <p className="max-w-[280px] text-right text-xs text-red-600" role="alert">
+      {showHelp && error && (
+        <p
+          className={`max-w-[280px] text-xs text-red-600 ${isStacked ? "w-full text-center" : "text-right"}`}
+          role="alert"
+        >
           {error}
         </p>
       )}

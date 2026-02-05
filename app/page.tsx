@@ -1,5 +1,5 @@
+import { AppHeader } from "@/components/AppHeader";
 import { HeroUpload } from "@/components/veridoc/HeroUpload";
-import { HomeLogin } from "@/components/HomeLogin";
 
 export default function Home() {
   return (
@@ -7,38 +7,11 @@ export default function Home() {
       <div className="relative overflow-hidden">
         <div className="pointer-events-none absolute -top-32 right-0 h-80 w-80 rounded-full bg-gradient-to-br from-teal-200/50 via-sky-200/40 to-white blur-3xl" />
         <div className="pointer-events-none absolute left-0 top-40 h-72 w-72 rounded-full bg-gradient-to-tr from-cyan-200/40 via-emerald-200/30 to-white blur-3xl" />
-        <header className="relative mx-auto flex w-full max-w-6xl items-center justify-between px-6 pb-8 pt-8 sm:px-8 lg:px-10">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/70 shadow-sm ring-1 ring-slate-200/70 backdrop-blur">
-              <span className="h-4 w-4 rounded-full bg-gradient-to-br from-teal-500 to-sky-500" />
-            </span>
-            <span className="text-lg font-semibold tracking-tight">Veridoc</span>
-          </div>
-          <div className="flex flex-wrap items-center justify-end gap-3">
-            <HomeLogin />
-            <a
-              href="#privacy"
-              className="hidden rounded-full px-4 py-2 text-sm font-medium text-slate-700 transition hover:text-slate-900 md:inline-block"
-            >
-              How Privacy Works
-            </a>
-            <a
-              href="/marketplace"
-              className="rounded-full px-4 py-2 text-sm font-medium text-slate-700 transition hover:text-slate-900"
-            >
-              Marketplace
-            </a>
-            <a
-              href="#hero-upload"
-              className="hidden rounded-full bg-slate-900 px-5 py-2 text-sm font-medium text-white transition hover:bg-slate-800 md:inline-block"
-            >
-              Upload Blood Test
-            </a>
-          </div>
-        </header>
-        <main className="relative mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 pb-20 sm:px-8 lg:px-10">
-          <section className="grid items-center gap-12 pb-8 pt-4 md:grid-cols-2">
-            <div className="flex flex-col gap-6">
+        <AppHeader />
+        <main className="relative mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 pb-20 sm:gap-20 sm:px-8 lg:px-10">
+          <section className="grid items-center gap-8 pb-4 pt-0 md:grid-cols-2 md:gap-12 md:pb-8 md:pt-4">
+            {/* On mobile: upload first (order-1). On desktop: text left, upload right. */}
+            <div className="flex order-2 flex-col gap-6 md:order-1">
               <span className="w-fit rounded-full border border-white/60 bg-white/70 px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-slate-600 shadow-sm backdrop-blur">
                 Privacy-first AI
               </span>
@@ -75,20 +48,22 @@ export default function Home() {
                 </span>
               </div>
             </div>
-            <div className="relative">
-              <div className="rounded-3xl border border-white/60 bg-white/60 p-6 shadow-2xl backdrop-blur">
-                <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-sm">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <div className="relative order-1 md:order-2">
+              <p className="mb-3 text-center text-sm font-medium text-slate-600 md:mb-0 md:text-left md:text-xs md:font-semibold md:uppercase md:tracking-[0.2em] md:text-slate-500">
+                Private Inference powered by NEAR AI
+              </p>
+              <div className="rounded-2xl border border-white/60 bg-white/60 p-4 shadow-xl backdrop-blur sm:rounded-3xl sm:p-6 sm:shadow-2xl">
+                <div className="rounded-xl border border-slate-200/70 bg-white/80 p-4 shadow-sm sm:rounded-2xl sm:p-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 sm:block">
                     Start locally
                   </p>
-                  <h2 className="mt-2 text-lg font-semibold text-slate-900">
+                  <h2 className="mt-1 text-base font-semibold text-slate-900 sm:mt-2 sm:text-lg">
                     Upload your lab report
                   </h2>
-                  <p className="mt-2 text-sm text-slate-600">
-                    Begin the wizard with a quick upload. Nothing is sent to a
-                    server.
+                  <p className="mt-1 text-xs text-slate-600 sm:mt-2 sm:text-sm">
+                    Begin the wizard with a quick upload. Nothing is sent to a server.
                   </p>
-                  <div className="mt-4">
+                  <div className="mt-3 sm:mt-4">
                     <HeroUpload />
                   </div>
                 </div>

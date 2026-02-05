@@ -12,6 +12,13 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Smooth scroll for anchor links (e.g. #hero-upload) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

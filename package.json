@@ -18,7 +18,7 @@
     "lucide-react": "^0.563.0",
     "mongodb": "^7.0.0",
     "mongoose": "^9.1.5",
-    "next": "16.1.4",
+    "next": "16.1.6",
     "pdf2json": "^4.0.2",
     "pdfjs-dist": "^5.4.530",
     "qrcode": "^1.5.4",
@@ -31,8 +31,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.1.4",
+    "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@finom/zod-to-json-schema": "npm:zod-to-json-schema@^3.24.0"
   }
 }
