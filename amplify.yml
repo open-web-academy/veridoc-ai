@@ -1,0 +1,25 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # Clean install from lockfile so Linux gets correct native binaries (e.g. lightningcss-linux-x64-gnu).
+        # Do not skip optional dependencies.
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - "**/*"
+  cache:
+    # Do not cache node_modules. Build must run npm ci on Linux so optional deps
+    # (e.g. lightningcss-linux-x64-gnu) are installed for the correct platform.
+    paths:
+      - .next/cache/**/*
+  customHeaders:
+    - pattern: "**/*"
+      headers:
+        - key: "Cache-Control"
+          value: "no-cache"
