@@ -110,10 +110,10 @@ function extractBalancedJson(text: string): string {
 
 /** Cuando JSON.parse falla, intenta extraer campos del texto con regex */
 function extractReportFromText(raw: string): NearReport | null {
-  const summaryMatch = raw.match(/"summary"\s*:\s*"((?:[^"\\]|\\.)*)"/s);
+  const summaryMatch = raw.match(/"summary"\s*:\s*"((?:[^"\\]|\\.)*)"/);
   const summary = summaryMatch ? summaryMatch[1].replace(/\\n/g, "\n").replace(/\\"/g, '"') : "";
 
-  const extraMatch = raw.match(/"extraInfo"\s*:\s*"((?:[^"\\]|\\.)*)"/s);
+  const extraMatch = raw.match(/"extraInfo"\s*:\s*"((?:[^"\\]|\\.)*)"/);
   const extraInfo = extraMatch ? extraMatch[1].replace(/\\n/g, "\n").replace(/\\"/g, '"') : undefined;
 
   const keyItems: string[] = [];
