@@ -82,29 +82,33 @@ import { analyzeWithNearAI, type NearReport } from "@/app/actions/analyze-near";
    const isUsingFallback = !nearLoading && (!nearResult?.success || !nearResult?.report);
 
    const handleDownload = () => {
-     const doc = new jsPDF({ format: "a4", unit: "mm" });
+     const doc = new jsPDF({ format: "a4", unit: "pt" });
      const pageW = doc.internal.pageSize.getWidth();
      const pageH = doc.internal.pageSize.getHeight();
-     const marginLeft = 22;
-     const marginRight = 22;
-     const marginTop = 22;
-     const marginBottom = 22;
-     const contentWidth = pageW - marginLeft - marginRight;
+     const marginPt = 55;
+     const marginLeft = marginPt;
+     const marginRight = marginPt;
+     const marginTop = marginPt;
+     const marginBottom = marginPt;
+     const contentWidthPt = pageW - marginLeft - marginRight;
      const maxY = pageH - marginBottom;
      let y = marginTop;
-     const lineHeight = 6;
+     const lineHeight = 14;
+     const fontSize = 11;
 
-     const pushText = (text: string, opts?: { bold?: boolean }) => {
+     const pushText = (text: string, opts?: { bold?: boolean; size?: number }) => {
+       const size = opts?.size ?? fontSize;
+       doc.setFontSize(size);
        doc.setFont("helvetica", opts?.bold ? "bold" : "normal");
-       const lines = doc.splitTextToSize(text, contentWidth);
-       lines.forEach((line: string) => {
+       const lines = doc.splitTextToSize(String(text).replace(/\r\n/g, "\n").replace(/\r/g, "\n"), contentWidthPt, { fontSize: size });
+       for (let i = 0; i < lines.length; i++) {
          if (y + lineHeight > maxY) {
            doc.addPage();
            y = marginTop;
          }
-         doc.text(line, marginLeft, y);
+         doc.text(lines[i], marginLeft, y);
          y += lineHeight;
-       });
+       }
      };
 
      doc.setFontSize(18);
@@ -116,7 +120,7 @@ import { analyzeWithNearAI, type NearReport } from "@/app/actions/analyze-near";
      doc.text("Veridoc AI", marginLeft, y);
      y += lineHeight * 2;
 
-     doc.setFontSize(11);
+     doc.setFontSize(fontSize);
      doc.setFont("helvetica", "normal");
      pushText(report.summary);
      y += lineHeight;
