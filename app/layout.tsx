@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { TatchiProvider } from "@/components/TatchiProvider";
+import { WalletProvider } from "@/components/providers/WalletProvider";
+import "./wallet-selector-styles.css";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -11,6 +13,14 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Inter font for NEAR Wallet Selector modal UI
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -27,9 +37,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
+        suppressHydrationWarning={true}
       >
-        <TatchiProvider>{children}</TatchiProvider>
+        <WalletProvider>
+          <TatchiProvider>{children}</TatchiProvider>
+        </WalletProvider>
       </body>
     </html>
   );
