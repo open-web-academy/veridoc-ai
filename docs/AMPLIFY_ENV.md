@@ -2,10 +2,16 @@
 
 En local usas el archivo `.env`, pero **ese archivo no se sube a Git** (está en `.gitignore`). En producción, Amplify **no tiene acceso a tu .env**, así que las variables deben configurarse en la consola de Amplify.
 
-## Por qué funciona en local y no en producción
+## Por qué en producción no se detectan (build vs runtime)
+
+En Amplify, las variables que configuras en la consola están disponibles **solo durante el build**, no en el **runtime** del servidor (SSR, API routes, Server Actions). Por eso en producción `process.env.MONGODB_URI` etc. pueden salir `undefined` aunque las tengas definidas en Amplify.
+
+Para que Next.js las use en runtime, el `amplify.yml` escribe esas variables en `.env.production` **antes** de `npm run build`, así Next.js puede cargarlas cuando la app recibe tráfico. No hace falta que hagas nada más si las variables están ya en Amplify.
+
+## Por qué funciona en local y no en producción (resumen)
 
 - **Local**: Next.js lee `MONGODB_URI`, `LLAMA_CLOUD_API_KEY`, `NEAR_AI_API_KEY` desde `.env`.
-- **Producción (Amplify)**: Esas variables solo existen si las defines en Amplify. Si no están ahí, verás "No configurado" en la página de status y LlamaParse/NEAR AI no funcionarán.
+- **Producción (Amplify)**: Debes definirlas en Environment variables de Amplify **y** el build debe escribirlas en `.env.production` (eso lo hace ya el `amplify.yml`). Si no están en Amplify, verás "No configurado" en /status.
 
 ## Cómo configurarlas en Amplify
 

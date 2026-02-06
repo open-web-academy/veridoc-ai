@@ -10,6 +10,9 @@ frontend:
         - npm ci
     build:
       commands:
+        # Amplify solo expone las variables en build, no en runtime. Next.js (SSR/API)
+        # necesita leerlas desde .env.production. Escribirlas aquí antes del build.
+        - env | grep -E '^(MONGODB_URI|LLAMA_CLOUD_API_KEY|NEAR_AI_API_KEY)=' >> .env.production || true
         - npm run build
   artifacts:
     baseDirectory: .next
