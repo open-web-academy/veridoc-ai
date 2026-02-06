@@ -1,10 +1,16 @@
 // lib/mongodb.ts
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error('Por favor define la variable MONGODB_URI en tu archivo .env.local');
+// No validar MONGODB_URI aquí: Next.js evalúa módulos en build y Amplify no tiene .env en build.
+// Validamos al conectar para que el build no falle.
+function getMongoUri(): string {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error(
+      "Por favor define la variable MONGODB_URI en tu archivo .env.local (o en las variables de entorno de Amplify)."
+    );
+  }
+  return uri;
 }
 
 // Interfaz para el caché global
@@ -30,13 +36,12 @@ async function dbConnect() {
   }
 
   if (!cached.promise) {
+    const uri = getMongoUri();
     const opts = {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-      return mongoose;
-    });
+    cached.promise = mongoose.connect(uri, opts).then((m) => m);
   }
 
   try {
