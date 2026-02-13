@@ -15,9 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Veridoc | Private AI Blood Test Insights",
+  title: "Veridoc AI",
   description:
     "Upload blood diagnostics and receive private, medical-grade AI explanations without exposing raw data.",
+  icons: {
+    icon: "/veridoc-logo.png",
+    apple: "/veridoc-logo.png",
+  },
 };
 
 export const viewport: Viewport = {

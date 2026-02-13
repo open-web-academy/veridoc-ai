@@ -2,6 +2,7 @@
 
 import { useEffect, useCallback, useState, useRef } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { HomeLogin } from "@/components/HomeLogin";
@@ -126,15 +127,17 @@ export function NavBar({
           ) : (
             <Link
               href="/"
-              className="flex shrink-0 items-center gap-2 rounded-lg py-2 outline-offset-2 focus:outline focus:ring-2 focus:ring-slate-400 min-h-[44px] sm:min-h-0 sm:py-2"
+              className="flex shrink-0 items-center rounded-lg py-2 outline-offset-2 focus:outline focus:ring-2 focus:ring-slate-400 min-h-[44px] sm:min-h-0 sm:py-2"
               aria-label={t("veridocHome")}
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-sky-500 shadow-sm sm:h-8 sm:w-8">
-                <span className="h-3 w-3 rounded-full bg-white/90" />
-              </span>
-              <span className="text-sm font-semibold tracking-tight text-slate-900 sm:text-sm">
-                Veridoc
-              </span>
+              <Image
+                src="/veridoc-logo.png"
+                alt="Veridoc"
+                width={120}
+                height={48}
+                className="h-10 w-auto object-contain sm:h-12"
+                priority
+              />
             </Link>
           )}
         </div>
