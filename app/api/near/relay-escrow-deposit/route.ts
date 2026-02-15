@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { deserialize as borshDeserialize, type Schema } from "borsh";
+import { createRequire } from "module";
+import path from "path";
 import { Account } from "@near-js/accounts";
 import { JsonRpcProvider } from "@near-js/providers";
 import { KeyPairSigner } from "@near-js/signers";
@@ -12,8 +13,11 @@ import {
   createStorageDepositAction,
 } from "@/lib/near-usdt";
 
-function deserializeSignedDelegate(schema: Schema, buffer: Uint8Array): unknown {
-  return borshDeserialize(schema, buffer);
+// Use same borsh as @near-js/transactions (avoids "schema.get is not a function" from root borsh).
+const requireNearBorsh = createRequire(path.join(process.cwd(), "node_modules/@near-js/transactions/package.json"));
+const borsh = requireNearBorsh("borsh") as { deserialize(schema: unknown, buffer: Uint8Array): unknown };
+function deserializeSignedDelegate(schema: unknown, buffer: Uint8Array): unknown {
+  return borsh.deserialize(schema, buffer);
 }
 
 /**

@@ -163,18 +163,28 @@ function ConsultationCard({
         </div>
       )}
 
-      {isSpecialistView && consultation.status === "pending" && (
-        <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end">
-          <button
-            type="button"
-            onClick={onDictaminar}
-            className="flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition shadow-sm"
-          >
-            <Stethoscope className="h-4 w-4" />
-            Dictaminar
-          </button>
-        </div>
-      )}
+      {isSpecialistView && consultation.status === "pending" && (() => {
+        const isPaid =
+          !!(consultation.paidAt ?? consultation.paid_at ?? consultation.amount_raw) ||
+          (consultation.paymentStatus ?? consultation.payment_status) === "paid" ||
+          (consultation.paymentStatus ?? consultation.payment_status) === "Paid";
+        return (
+          <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-end gap-2">
+            {!isPaid ? (
+              <span className="text-xs text-amber-600 font-medium">Esperando confirmación de pago</span>
+            ) : (
+              <button
+                type="button"
+                onClick={onDictaminar}
+                className="flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition shadow-sm"
+              >
+                <Stethoscope className="h-4 w-4" />
+                Dictaminar
+              </button>
+            )}
+          </div>
+        );
+      })()}
     </div>
   );
 }

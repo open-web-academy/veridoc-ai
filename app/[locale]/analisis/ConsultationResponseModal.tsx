@@ -59,7 +59,6 @@ export function ConsultationResponseModal({
                 specialistAccount
             );
 
-            releaseResult.success = true;
             if (!releaseResult.success) {
                 const releaseErr =
                     releaseResult.error ||

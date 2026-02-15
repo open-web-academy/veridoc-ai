@@ -47,7 +47,7 @@ Short, benefit-focused overview of the main technologies:
 ### 2. **NEAR Protocol — accounts, RPC, transactions**
 
 - **Libraries:** `@near-js/accounts`, `@near-js/providers`, `@near-js/transactions`, `@near-js/signers`, `@near-js/crypto`.
-- **RPC:** `NEAR_RPC_URL` — mainnet `https://rpc.mainnet.near.org` or testnet `https://rpc.testnet.near.org` (from `lib/near-config.ts`).
+- **RPC:** `NEAR_RPC_URL` or `NEXT_PUBLIC_NEAR_RPC_URL` — defaults to FastNear (mainnet `https://rpc.mainnet.fastnear.com`, testnet `https://rpc.testnet.fastnear.com`). The legacy `rpc.*.near.org` endpoints are deprecated.
 - **Usage:**
   - **Accounts:** Each user has a NEAR account (implicit or named) used as wallet and identity. Balances (NEAR, USDT) and transfers are on-chain.
   - **Signing:** Via Privy-created NEAR wallet + custom `NearPrivySigner` (`lib/near-privy-signer.ts`) implementing NEAR `Signer`; used with `Account` for signing transactions and **NEP-366 Signed Delegates** (meta-transactions).

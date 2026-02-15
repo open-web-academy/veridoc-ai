@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { verifyNearTransaction } from "@/lib/near-tx-verify";
+import { RELAYER_ACCOUNT_ID } from "@/lib/near-config";
 
 /**
  * POST /api/consultations/confirm-payment
  * Body: { consultationId: string, txHash: string, amountRaw: string }
- * 
+ *
  * Confirms that a payment was made to escrow and updates the consultation.
  * Verifies the transaction on-chain before updating the backend.
  */
@@ -32,9 +34,14 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Verify transaction on-chain (optional but recommended)
-    // For now, we'll trust the frontend and let the backend verify if needed
-    // In production, you might want to verify txHash here before calling backend
+    const relayerId = process.env.NEAR_RELAYER_ACCOUNT_ID ?? RELAYER_ACCOUNT_ID;
+    const txOk = await verifyNearTransaction(txHash, relayerId);
+    if (!txOk) {
+      return NextResponse.json(
+        { error: "Transacción no verificada en la red. El pago no pudo confirmarse." },
+        { status: 400 }
+      );
+    }
 
     // Call backend API to confirm payment
     const url = `${baseUrl.replace(/\/$/, "")}/api/consultations/${consultationId}/confirm-payment`;

@@ -13,6 +13,44 @@ import { getUsdtBalance, formatUsdtBalance, parseUsdtAmount, createTransferUsdtA
 import { ESCROW_ACCOUNT_ID } from "@/lib/near-config";
 import { encodeSignedDelegate } from "@near-js/transactions";
 
+const PENDING_PAYMENT_KEY = "veridoc_pending_payment_confirm";
+const PENDING_PAYMENT_MAX_AGE_MS = 30 * 60 * 1000; // 30 min
+
+function savePendingPayment(consultationId: string, txHash: string, amountRaw: string) {
+  try {
+    localStorage.setItem(
+      PENDING_PAYMENT_KEY,
+      JSON.stringify({ consultationId, txHash, amountRaw, ts: Date.now() })
+    );
+  } catch {
+    /* ignore */
+  }
+}
+
+function clearPendingPayment() {
+  try {
+    localStorage.removeItem(PENDING_PAYMENT_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+function getPendingPayment(): { consultationId: string; txHash: string; amountRaw: string } | null {
+  try {
+    const raw = localStorage.getItem(PENDING_PAYMENT_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as { consultationId?: string; txHash?: string; amountRaw?: string; ts?: number };
+    if (!data?.consultationId || !data?.txHash || !data?.amountRaw || !data?.ts) return null;
+    if (Date.now() - data.ts > PENDING_PAYMENT_MAX_AGE_MS) {
+      clearPendingPayment();
+      return null;
+    }
+    return { consultationId: data.consultationId, txHash: data.txHash, amountRaw: data.amountRaw };
+  } catch {
+    return null;
+  }
+}
+
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, {
     day: "numeric",
@@ -44,6 +82,8 @@ export function RequestSecondOpinion({
   const [usdtBalance, setUsdtBalance] = useState<string | null>(null);
   /** Hash of the USDT→escrow transaction (so user can verify in explorer; not the 2 NEAR fund tx) */
   const [paymentTxHash, setPaymentTxHash] = useState<string | null>(null);
+  /** True while we recover a pending payment after reload */
+  const [recoveringPayment, setRecoveringPayment] = useState(false);
 
   const handlePreviewIDB = async () => {
     if (!selectedId) return;
@@ -81,6 +121,34 @@ export function RequestSecondOpinion({
       .finally(() => setCheckingBalance(false));
   }, [walletId]);
 
+  // Recover pending payment if user reloaded after relay but before confirm-payment
+  useEffect(() => {
+    const pending = getPendingPayment();
+    if (!pending) return;
+    setRecoveringPayment(true);
+    fetch("/api/consultations/confirm-payment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        consultationId: pending.consultationId,
+        txHash: pending.txHash,
+        amountRaw: pending.amountRaw,
+      }),
+    })
+      .then((res) => res.json().catch(() => ({})))
+      .then((result) => {
+        if (result?.success || result?.data) {
+          clearPendingPayment();
+          setPaymentTxHash(pending.txHash);
+          setSubmitted(true);
+        } else {
+          setError(result?.error || result?.details || "No se pudo completar la confirmación del pago.");
+        }
+      })
+      .catch(() => setError("Error al recuperar el pago pendiente. Revisa en Análisis si la consulta quedó pagada."))
+      .finally(() => setRecoveringPayment(false));
+  }, []);
+
   const handleSubmit = useCallback(async () => {
     if (!selectedId) return;
 
@@ -100,34 +168,29 @@ export function RequestSecondOpinion({
       return;
     }
 
-    // Check USDT balance
-    // if (usdtBalance === null) {
-    //   setError("Checking balance...");
-    //   setCheckingBalance(true);
-    //   try {
-    //     const raw = await getUsdtBalance(patientAccount);
-    //     const formatted = formatUsdtBalance(raw);
-    //     setUsdtBalance(formatted);
-    //     const balanceNum = parseFloat(formatted.replace(/,/g, ""));
-    //     if (balanceNum < priceUsdt) {
-    //       setError(`Insufficient balance. You have ${formatted} USDT, need ${priceUsdt} USDT.`);
-    //       setCheckingBalance(false);
-    //       return;
-    //     }
-    //   } catch (err) {
-    //     setError("Failed to check balance. Please try again.");
-    //     setCheckingBalance(false);
-    //     return;
-    //   } finally {
-    //     setCheckingBalance(false);
-    //   }
-    // } else {
-    //   const balanceNum = parseFloat(usdtBalance.replace(/,/g, ""));
-    //   if (balanceNum < priceUsdt) {
-    //     setError(`Insufficient balance. You have ${usdtBalance} USDT, need ${priceUsdt} USDT.`);
-    //     return;
-    //   }
-    // }
+    // Check USDT balance before proceeding
+    let balanceNum: number;
+    if (usdtBalance === null) {
+      setCheckingBalance(true);
+      try {
+        const raw = await getUsdtBalance(patientAccount);
+        const formatted = formatUsdtBalance(raw);
+        setUsdtBalance(formatted);
+        balanceNum = parseFloat(formatted.replace(/,/g, ""));
+      } catch (err) {
+        setError("No se pudo verificar el saldo. Intenta de nuevo.");
+        setCheckingBalance(false);
+        return;
+      } finally {
+        setCheckingBalance(false);
+      }
+    } else {
+      balanceNum = parseFloat(usdtBalance.replace(/,/g, ""));
+    }
+    if (balanceNum < priceUsdt) {
+      setError(`Saldo insuficiente. Tienes ${usdtBalance ?? "0"} USDT y necesitas ${priceUsdt} USDT.`);
+      return;
+    }
 
     const selectedAnalysis = analyses.find((a) => a.id === selectedId);
     if (!selectedAnalysis) return;
@@ -182,13 +245,15 @@ export function RequestSecondOpinion({
 
       const consultationId = createdId;
 
-      // Step 2: Meta-transaction (SignedDelegate) for escrow deposit — same API as withdraw in profile
+      // Step 2: Meta-transaction (SignedDelegate) for escrow deposit — same API as withdraw in profile.
+      // NEP-141 ft_transfer accepts a memo: we send consultationId so the transfer is linked on-chain to this consultation (BD id).
       const amountRaw = parseUsdtAmount(priceUsdt.toString());
       const transferAction = createTransferUsdtAction(amountRaw, ESCROW_ACCOUNT_ID, consultationId);
 
+      // TTL generoso para evitar DelegateActionExpired si hay latencia (crear consulta, firma, relay)
       const signedDelegate = await nearAccount.signedDelegate({
         actions: [transferAction],
-        blockHeightTtl: 100,
+        blockHeightTtl: 600, // ~10 min en NEAR (1 block ≈ 1s)
         receiverId: USDT_CONTRACT_ID,
       });
 
@@ -219,6 +284,9 @@ export function RequestSecondOpinion({
         return;
       }
 
+      // Persist so a reload before confirm-payment can recover
+      savePendingPayment(consultationId, relayResult.txHash, amountRaw);
+
       // Step 5: Confirm payment with backend (optional; backend may not have the endpoint yet)
       const confirmRes = await fetch("/api/consultations/confirm-payment", {
         method: "POST",
@@ -242,6 +310,7 @@ export function RequestSecondOpinion({
         return;
       }
 
+      clearPendingPayment();
       // Success: USDT was sent to escrow. If backend doesn't have confirm-payment yet, we still show success.
       setPaymentTxHash(relayResult.txHash);
       setSubmitted(true);
@@ -289,6 +358,17 @@ export function RequestSecondOpinion({
         >
           Ver mis análisis
         </Link>
+      </div>
+    );
+  }
+
+  if (recoveringPayment) {
+    return (
+      <div className="rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur">
+        <div className="flex items-center gap-3 text-teal-700">
+          <Loader2 className="h-5 w-5 animate-spin shrink-0" />
+          <p className="text-sm font-medium">Completando confirmación de pago (recarga recuperada)...</p>
+        </div>
       </div>
     );
   }
@@ -405,7 +485,12 @@ export function RequestSecondOpinion({
         <button
           type="button"
           onClick={handleSubmit}
-          disabled={!selectedId || submitting}
+          disabled={
+            !selectedId ||
+            submitting ||
+            checkingBalance ||
+            (usdtBalance !== null && parseFloat(usdtBalance.replace(/,/g, "")) < priceUsdt)
+          }
           className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50 disabled:pointer-events-none"
         >
           {submitting ? (
