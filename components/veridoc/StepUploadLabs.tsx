@@ -136,10 +136,10 @@ export const StepUploadLabs = ({
         }
 
         if (!result.success && "message" in result) {
-          setError(result.message || 'Error al analizar el documento');
+          setError(result.message || t("errorAnalyzing"));
         }
       } catch (err) {
-        setError('Error al procesar el archivo. Por favor, intenta de nuevo.');
+        setError(t("errorProcessing"));
         setAnalysisResult(null);
       } finally {
         setIsLoading(false);

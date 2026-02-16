@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { NavBar } from "@/components/NavBar";
 import {
@@ -15,6 +16,7 @@ import { RequestSecondOpinion } from "./RequestSecondOpinion";
 import type { UiSpecialist } from "@/lib/marketplace/specialists";
 
 export function SpecialistDetailView({ specialist }: { specialist: UiSpecialist }) {
+  const t = useTranslations("marketplace");
   return (
     <div className="min-h-screen bg-[#f6fbfb] text-slate-900">
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -31,7 +33,7 @@ export function SpecialistDetailView({ specialist }: { specialist: UiSpecialist 
             className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900"
           >
             <ChevronLeft className="h-4 w-4" />
-            Volver al marketplace
+            {t("backToMarketplace")}
           </Link>
 
           {/* Specialist profile card */}
@@ -49,7 +51,7 @@ export function SpecialistDetailView({ specialist }: { specialist: UiSpecialist 
                   <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
                   <span>{specialist.rating.toFixed(1)}</span>
                   <span className="font-normal text-amber-600/80">
-                    ({specialist.reviews} reseñas)
+                    ({specialist.reviews} {t("reviews")})
                   </span>
                 </div>
               </div>
@@ -61,7 +63,7 @@ export function SpecialistDetailView({ specialist }: { specialist: UiSpecialist 
                   {specialist.verified && (
                     <span
                       className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-50 text-teal-600"
-                      title="Verificado"
+                      title={t("verified")}
                     >
                       <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="3">
                         <polyline points="20 6 9 17 4 12" />
@@ -75,7 +77,7 @@ export function SpecialistDetailView({ specialist }: { specialist: UiSpecialist 
                 <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-600">
                   <span className="flex items-center gap-1.5">
                     <Award className="h-4 w-4 text-slate-400" />
-                    {specialist.experience} años de experiencia
+                    {specialist.experience} {t("yearsOfExperience")}
                   </span>
                   <span className="flex items-center gap-1.5">
                     <Languages className="h-4 w-4 text-slate-400" />
@@ -87,7 +89,7 @@ export function SpecialistDetailView({ specialist }: { specialist: UiSpecialist 
                   </span>
                   <span className="flex items-center gap-1.5">
                     <CalendarCheck className="h-4 w-4 text-slate-400" />
-                    Disponibilidad: {specialist.availability}
+                    {t("availability")}: {specialist.availability}
                   </span>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -110,7 +112,7 @@ export function SpecialistDetailView({ specialist }: { specialist: UiSpecialist 
                         className="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-teal-50 px-3.5 py-1.5 text-sm font-medium text-teal-700 transition hover:border-teal-300 hover:bg-teal-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-1"
                       >
                         <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                        Cédula / Licencia
+                        {t("licenseDocument")}
                       </a>
                     )}
                     {specialist.degreeDocumentUrl && (
@@ -121,7 +123,7 @@ export function SpecialistDetailView({ specialist }: { specialist: UiSpecialist 
                         className="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-teal-50 px-3.5 py-1.5 text-sm font-medium text-teal-700 transition hover:border-teal-300 hover:bg-teal-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-1"
                       >
                         <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                        Título / Grado
+                        {t("degreeDocument")}
                       </a>
                     )}
                   </div>
@@ -132,7 +134,7 @@ export function SpecialistDetailView({ specialist }: { specialist: UiSpecialist 
                   </span>
                   <span className="text-sm font-medium text-slate-500">USDT</span>
                   <span className="ml-2 text-sm text-slate-500">
-                    por revisión de panel
+                    {t("perPanelReview")}
                   </span>
                 </div>
               </div>
@@ -151,7 +153,7 @@ export function SpecialistDetailView({ specialist }: { specialist: UiSpecialist 
           {/* Security note */}
           <div className="mt-8 rounded-2xl border border-slate-200/60 bg-white/50 px-4 py-3 text-center backdrop-blur">
             <p className="text-xs text-slate-500">
-              Los datos se envían de forma segura. El especialista solo accede al análisis que tú elijas para esta segunda opinión.
+              {t("securityNote")}
             </p>
           </div>
         </main>

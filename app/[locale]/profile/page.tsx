@@ -242,7 +242,7 @@ function ProfilePageContent() {
       // NEP-366: delegate receiverId = contract that executes the actions (USDT), not the relayer.
       const signedDelegate = await nearAccount.signedDelegate({
         actions: [action],
-        blockHeightTtl: 600, // ~10 min; evita DelegateActionExpired con latencia/firma lenta
+        blockHeightTtl: 100,
         receiverId: USDT_CONTRACT_ID,
       });
       const encoded = encodeSignedDelegate(signedDelegate);

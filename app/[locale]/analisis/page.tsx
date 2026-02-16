@@ -40,27 +40,27 @@ function formatDate(iso: string) {
   });
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, t }: { status: string; t: (key: string) => string }) {
   switch (status) {
     case "pending":
       return (
         <span className="flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 border border-amber-100">
           <Clock className="h-3 w-3" />
-          Pendiente
+          {t("statusPending")}
         </span>
       );
     case "completed":
       return (
         <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 border border-emerald-100">
           <CheckCircle2 className="h-3 w-3" />
-          Completado
+          {t("statusCompleted")}
         </span>
       );
     case "rejected":
       return (
         <span className="flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700 border border-rose-100">
           <AlertCircle className="h-3 w-3" />
-          Rechazado
+          {t("statusRejected")}
         </span>
       );
     default:
@@ -75,11 +75,13 @@ function StatusBadge({ status }: { status: string }) {
 function ConsultationCard({
   consultation,
   isSpecialistView = false,
-  onDictaminar
+  onDictaminar,
+  t,
 }: {
   consultation: any;
   isSpecialistView?: boolean;
   onDictaminar?: () => void;
+  t: (key: string) => string;
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -89,9 +91,9 @@ function ConsultationCard({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="truncate font-semibold text-slate-900">
-              Solicitud de Consulta
+              {t("consultationRequestTitle")}
             </span>
-            <StatusBadge status={consultation.status} />
+            <StatusBadge status={consultation.status} t={t} />
           </div>
           <p className="mt-1 text-xs text-slate-500">
             {formatDate(consultation.createdAt)}
@@ -104,13 +106,13 @@ function ConsultationCard({
               rel="noopener noreferrer"
               className="truncate text-xs font-medium text-teal-700 underline hover:text-teal-800"
             >
-              Ver análisis
+              {t("viewAnalysis")}
             </a>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2 sm:flex-col sm:items-end">
           <p className="text-xs text-slate-500 font-semibold text-teal-700">
-            Especialista: {consultation.specialistName}
+            {t("specialistLabel")} {consultation.specialistName}
           </p>
           <span className="text-[10px] font-mono font-medium text-slate-400">
             {consultation.specialistAccount.slice(0, 8)}...{consultation.specialistAccount.slice(-4)}
@@ -126,12 +128,12 @@ function ConsultationCard({
         {expanded ? (
           <>
             <ChevronUp className="h-4 w-4" />
-            Cerrar detalle
+            {t("closeDetail")}
           </>
         ) : (
           <>
             <ChevronDown className="h-4 w-4" />
-            Ver detalles y comentarios
+            {t("viewDetailsAndComments")}
           </>
         )}
       </button>
@@ -140,16 +142,16 @@ function ConsultationCard({
         <div className="mt-4 space-y-4 rounded-2xl border border-slate-200/70 bg-white/90 p-4 text-sm">
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Resumen del Paciente (IA)
+              {t("patientSummaryTitle")}
             </h4>
             <p className="mt-1 leading-relaxed text-slate-700">
-              {consultation.analysisCommentsAI || "Sin comentarios adicionales."}
+              {consultation.analysisCommentsAI || t("noAdditionalComments")}
             </p>
           </div>
           {consultation.analysisCommentsSpecialist ? (
             <div className="pt-3 border-t border-slate-100">
               <h4 className="text-xs font-semibold uppercase tracking-wider text-teal-600">
-                Respuesta del Especialista
+                {t("specialistResponseTitle")}
               </h4>
               <p className="mt-1 whitespace-pre-wrap leading-relaxed text-slate-800 font-medium">
                 {consultation.analysisCommentsSpecialist}
@@ -157,34 +159,24 @@ function ConsultationCard({
             </div>
           ) : (
             <div className="pt-3 border-t border-slate-100">
-              <p className="text-xs italic text-slate-400">Esperando respuesta del especialista...</p>
+              <p className="text-xs italic text-slate-400">{t("waitingSpecialistResponse")}</p>
             </div>
           )}
         </div>
       )}
 
-      {isSpecialistView && consultation.status === "pending" && (() => {
-        const isPaid =
-          !!(consultation.paidAt ?? consultation.paid_at ?? consultation.amount_raw) ||
-          (consultation.paymentStatus ?? consultation.payment_status) === "paid" ||
-          (consultation.paymentStatus ?? consultation.payment_status) === "Paid";
-        return (
-          <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-end gap-2">
-            {!isPaid ? (
-              <span className="text-xs text-amber-600 font-medium">Esperando confirmación de pago</span>
-            ) : (
-              <button
-                type="button"
-                onClick={onDictaminar}
-                className="flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition shadow-sm"
-              >
-                <Stethoscope className="h-4 w-4" />
-                Dictaminar
-              </button>
-            )}
-          </div>
-        );
-      })()}
+      {isSpecialistView && consultation.status === "pending" && (
+        <div className="mt-4 pt-4 border-t border-slate-100 flex justify-end">
+          <button
+            type="button"
+            onClick={onDictaminar}
+            className="flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition shadow-sm"
+          >
+            <Stethoscope className="h-4 w-4" />
+            {t("dictaminarButton")}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -451,7 +443,7 @@ export default function AnalisisPage() {
                 : "text-slate-500 hover:text-slate-700"
                 }`}
             >
-              Análisis Locales
+              {t("tabLocal")}
             </button>
             <button
               onClick={() => setActiveTab("consultations")}
@@ -460,7 +452,7 @@ export default function AnalisisPage() {
                 : "text-slate-500 hover:text-slate-700"
                 }`}
             >
-              Solicitudes Enviadas
+              {t("tabConsultations")}
             </button>
             {isSpecialist && (
               <button
@@ -470,7 +462,7 @@ export default function AnalisisPage() {
                   : "text-slate-500 hover:text-slate-700"
                   }`}
               >
-                Dictámenes Pendientes
+                {t("tabSpecialist")}
               </button>
             )}
           </div>
@@ -528,13 +520,13 @@ export default function AnalisisPage() {
               {isLoadingConsultations ? (
                 <div className="flex flex-col items-center justify-center py-20">
                   <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
-                  <p className="mt-3 text-sm text-slate-500">Cargando consultas de la red...</p>
+                  <p className="mt-3 text-sm text-slate-500">{t("loadingConsultations")}</p>
                 </div>
               ) : consultations.length > 0 ? (
                 <ul className="grid gap-6">
                   {consultations.map((consultation) => (
                     <li key={consultation._id}>
-                      <ConsultationCard consultation={consultation} />
+                      <ConsultationCard consultation={consultation} t={t} />
                     </li>
                   ))}
                 </ul>
@@ -544,16 +536,16 @@ export default function AnalisisPage() {
                     <Stethoscope className="h-10 w-10 text-slate-400" />
                   </div>
                   <h2 className="text-lg font-semibold text-slate-900">
-                    No hay solicitudes de segunda opinión
+                    {t("noRequestsTitle")}
                   </h2>
                   <p className="mt-2 max-w-sm text-slate-600">
-                    Cuando elijas a un especialista del Marketplace para revisar tus análisis, aparecerán aquí.
+                    {t("noRequestsHint")}
                   </p>
                   <Link
                     href="/marketplace"
                     className="mt-6 inline-flex items-center gap-2 rounded-full bg-teal-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-700"
                   >
-                    Ir al Marketplace
+                    {t("goToMarketplace")}
                   </Link>
                 </div>
               )}
@@ -563,7 +555,7 @@ export default function AnalisisPage() {
               {isLoadingConsultations ? (
                 <div className="flex flex-col items-center justify-center py-20">
                   <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
-                  <p className="mt-3 text-sm text-slate-500">Cargando dictámenes...</p>
+                  <p className="mt-3 text-sm text-slate-500">{t("loadingDictamenes")}</p>
                 </div>
               ) : specialistConsultations.length > 0 ? (
                 <ul className="grid gap-6">
@@ -573,6 +565,7 @@ export default function AnalisisPage() {
                         consultation={consultation}
                         isSpecialistView={true}
                         onDictaminar={() => setSelectedConsultationForDictamen(consultation)}
+                        t={t}
                       />
                     </li>
                   ))}
@@ -583,10 +576,10 @@ export default function AnalisisPage() {
                     <Inbox className="h-10 w-10 text-slate-400" />
                   </div>
                   <h2 className="text-lg font-semibold text-slate-900">
-                    No tienes dictámenes asignados
+                    {t("noDictamenesTitle")}
                   </h2>
                   <p className="mt-2 max-w-sm text-slate-600">
-                    Aquí aparecerán las solicitudes de pacientes que elijan tu perfil para una segunda opinión.
+                    {t("noDictamenesHint")}
                   </p>
                 </div>
               )}

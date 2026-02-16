@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 
 type ServiceStatus = "ok" | "error" | "unconfigured";
@@ -187,6 +188,7 @@ function ServiceCard({ service }: { service: ServiceCheck }) {
 }
 
 export default function StatusPage() {
+  const t = useTranslations("status");
   const [data, setData] = useState<StatusResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -206,14 +208,14 @@ export default function StatusPage() {
         setLastRefresh(new Date());
       } catch (e) {
         setError(
-          e instanceof Error ? e.message : "Error al cargar el estado"
+          e instanceof Error ? e.message : t("errorLoading")
         );
       } finally {
         setLoading(false);
         setRefreshing(false);
       }
     },
-    []
+    [t]
   );
 
   // Initial fetch
@@ -260,7 +262,7 @@ export default function StatusPage() {
             </svg>
           </div>
           <h1 className="text-xl font-semibold text-red-600 dark:text-red-400">
-            Error al cargar el estado
+            {t("errorLoading")}
           </h1>
           <p className="text-sm text-[var(--foreground)]/70">{error}</p>
           <div className="flex items-center justify-center gap-4">
@@ -272,13 +274,13 @@ export default function StatusPage() {
               }}
               className="text-sm text-[var(--foreground)]/80 hover:underline"
             >
-              Reintentar
+              {t("retry")}
             </button>
             <Link
               href="/"
               className="text-sm text-[var(--foreground)]/80 hover:underline"
             >
-              Volver al inicio
+              {t("backToHome")}
             </Link>
           </div>
         </div>
@@ -290,10 +292,10 @@ export default function StatusPage() {
 
   const overallLabel =
     data.status === "healthy"
-      ? "Todos los servicios están operativos"
+      ? t("allOperational")
       : data.status === "degraded"
-        ? "Servicios requeridos OK; algunos opcionales sin configurar"
-        : "Hay servicios requeridos con error o sin configurar";
+        ? t("degraded")
+        : t("unhealthy");
 
   const overallColor =
     data.status === "healthy"

@@ -33,11 +33,11 @@ export const StepSecondOpinion = ({
         window.open(url, "_blank");
         // Optativo: revocar después de un tiempo o dejar que el navegador lo maneje
       } else {
-        alert("No se encontró el archivo en IndexedDB");
+        alert(t("fileNotFoundIDB"));
       }
     } catch (err) {
       console.error("Error verifying IDB", err);
-      alert("Error al acceder a IndexedDB");
+      alert(t("errorAccessingIDB"));
     } finally {
       setVerifying(false);
     }

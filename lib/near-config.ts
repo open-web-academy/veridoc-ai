@@ -13,13 +13,10 @@ export const MIN_NEAR_TO_CREATE_IMPLICIT = "0.002";
 /** Testnet faucet / funding page. Mainnet: user must send from exchange or another wallet. */
 export const NEAR_TESTNET_FAUCET_URL = "https://wallet.testnet.near.org/create";
 
-/** RPC URL: allow env override (NEAR_RPC_URL or NEXT_PUBLIC_NEAR_RPC_URL); else use non-deprecated providers. */
 export const NEAR_RPC_URL =
-  process.env.NEAR_RPC_URL ||
-  process.env.NEXT_PUBLIC_NEAR_RPC_URL ||
-  (NEAR_NETWORK === "mainnet"
-    ? "https://rpc.mainnet.fastnear.com"
-    : "https://rpc.testnet.fastnear.com");
+  NEAR_NETWORK === "mainnet"
+    ? "https://rpc.mainnet.near.org"
+    : "https://rpc.testnet.near.org";
 
 /** NEAR Intents Verifier contract (holds deposits, mt_balance_of, ft_withdraw). */
 export const VERIFIER_CONTRACT_ID = "intents.near";

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState, useRef, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { usePrivy, useLogin, useLoginWithOAuth } from "@privy-io/react-auth";
 import { LogOut, Copy, Fingerprint, Mail, Wallet } from "lucide-react";
@@ -59,6 +60,7 @@ export function HomeLogin({
   variant?: HomeLoginVariant;
   showHelpInHeader?: boolean;
 }) {
+  const t = useTranslations("homeLogin");
   const { ready, authenticated, user, logout } = usePrivy();
   const { walletId, isLoading: nearLoading, createNearWallet } = useNEAR();
   const [usdtBalance, setUsdtBalance] = useState<string | null>(null);
@@ -88,11 +90,11 @@ export function HomeLogin({
 
   const { login } = useLogin({
     onError: (error) => {
-      setError(error != null ? String(error) : "Login failed");
+      setError(error != null ? String(error) : t("loginFailed"));
     },
   });
   const { initOAuth } = useLoginWithOAuth({
-    onError: (error) => setError(error != null ? String(error) : "Google login failed"),
+    onError: (error) => setError(error != null ? String(error) : t("googleLoginFailed")),
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -188,14 +190,14 @@ export function HomeLogin({
             onClick={() => createNearWallet()}
             className="shrink-0 rounded-md bg-teal-100 px-2.5 py-1.5 text-xs font-medium text-teal-800 transition hover:bg-teal-200"
           >
-            Reintentar wallet NEAR
+            {t("retryNearWallet")}
           </button>
         )}
-        {nearLoading && <span className="text-xs text-slate-500">Creando wallet NEAR…</span>}
+        {nearLoading && <span className="text-xs text-slate-500">{t("creatingNearWallet")}</span>}
         <Link
           href="/profile"
           className={`max-w-[120px] truncate rounded-md bg-slate-100/80 px-2.5 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-200/80 hover:text-slate-800 sm:max-w-[160px] ${isStacked ? "w-full max-w-none text-center" : ""}`}
-          title="Ir a tu perfil"
+          title={t("goToProfile")}
         >
           {getUserDisplayName(user)}
         </Link>
@@ -204,7 +206,7 @@ export function HomeLogin({
             type="button"
             onClick={handleCopy}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
-            aria-label="Copiar dirección o email"
+            aria-label={t("copyAddress")}
           >
             <Copy className="h-4 w-4" />
           </button>
@@ -213,7 +215,7 @@ export function HomeLogin({
           type="button"
           onClick={handleLogout}
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
-          aria-label="Cerrar sesión"
+          aria-label={t("logout")}
         >
           <LogOut className="h-4 w-4" />
         </button>

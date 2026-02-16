@@ -156,7 +156,14 @@
     "additionalInfoPdf": "Additional information:",
     "errorGenerating": "Error generating recommendation",
     "unknownType": "Unknown type",
-    "unknownError": "Unknown error while analyzing"
+    "unknownError": "Unknown error while analyzing",
+    "nearAiTitle": "Analysis with NEAR AI",
+    "nearAiDesc": "Analyze the extracted document using artificial intelligence",
+    "analyzingNear": "Analyzing...",
+    "analyzeButton": "Analyze with NEAR AI",
+    "sendingToNear": "Sending document to NEAR AI...",
+    "analysisComplete": "Analysis complete",
+    "errorLabel": "Error"
   },
   "stepSecondOpinion": {
     "title": "Request second opinion",
@@ -168,7 +175,9 @@
     "analisisPage": "Analysis",
     "otherActions": "Other actions",
     "backToReport": "Back to report",
-    "startOver": "Start over"
+    "startOver": "Start over",
+    "fileNotFoundIDB": "File not found in IndexedDB",
+    "errorAccessingIDB": "Error accessing IndexedDB"
   },
   "analisis": {
     "title": "Your analyses",
@@ -189,7 +198,31 @@
     "confirmClearAll": "Delete all analyses? This cannot be undone.",
     "noAnalysesYet": "No analyses yet",
     "noAnalysesHint": "Upload your studies in Veridoc, complete the wizard and request a second opinion for them to appear here.",
-    "goToWizard": "Go to wizard"
+    "goToWizard": "Go to wizard",
+    "tabLocal": "Local Analyses",
+    "tabConsultations": "Sent Requests",
+    "tabSpecialist": "Pending Reports",
+    "loadingConsultations": "Loading consultations from network...",
+    "loadingDictamenes": "Loading reports...",
+    "noRequestsTitle": "No second opinion requests",
+    "noRequestsHint": "When you choose a specialist from the Marketplace to review your analyses, they will appear here.",
+    "goToMarketplace": "Go to Marketplace",
+    "noDictamenesTitle": "No reports assigned to you",
+    "noDictamenesHint": "Requests from patients who choose your profile for a second opinion will appear here.",
+    "statusPending": "Pending",
+    "statusCompleted": "Completed",
+    "statusRejected": "Rejected",
+    "consultationRequestTitle": "Consultation Request",
+    "viewAnalysis": "View analysis",
+    "specialistLabel": "Specialist:",
+    "closeDetail": "Close detail",
+    "viewDetailsAndComments": "View details and comments",
+    "patientSummaryTitle": "Patient Summary (AI)",
+    "noAdditionalComments": "No additional comments.",
+    "specialistResponseTitle": "Specialist Response",
+    "waitingSpecialistResponse": "Waiting for specialist response...",
+    "dictaminarButton": "Submit Report",
+    "waitingPayment": "Waiting for payment confirmation"
   },
   "homeLogin": {
     "goToProfile": "Go to your profile",
@@ -198,7 +231,9 @@
     "chooseLogin": "Choose login method",
     "signedIn": "Signed in",
     "loginFailed": "Login failed",
-    "googleLoginFailed": "Google login failed"
+    "googleLoginFailed": "Google login failed",
+    "retryNearWallet": "Retry NEAR wallet",
+    "creatingNearWallet": "Creating NEAR wallet…"
   },
   "marketplace": {
     "badge": "Second opinion on blood work",
@@ -224,9 +259,15 @@
     "consultar": "Check",
     "perConsultation": "per consultation",
     "requestSecondOpinion": "Request second opinion",
-    "availability": "Avail",
+    "availability": "Availability",
     "license": "License",
-    "degree": "Degree"
+    "degree": "Degree",
+    "reviews": "reviews",
+    "yearsOfExperience": "years of experience",
+    "licenseDocument": "License",
+    "degreeDocument": "Degree",
+    "perPanelReview": "per panel review",
+    "securityNote": "Data is sent securely. The specialist only has access to the analysis you choose for this second opinion."
   },
   "profile": {
     "title": "Profile",
@@ -357,5 +398,46 @@
   "metadata": {
     "title": "Veridoc | Private AI Blood Test Insights",
     "description": "Upload blood diagnostics and receive private, medical-grade AI explanations without exposing raw data."
+  },
+  "requestSecondOpinion": {
+    "title": "Send my analyses and request second opinion",
+    "noAnalysesTitle": "Send my analyses and request second opinion",
+    "noAnalysesDesc": "You have no saved analyses. Complete the Veridoc wizard to generate an analysis, then you can send it to this specialist.",
+    "goToWizard": "Go to wizard",
+    "viewMyAnalyses": "View my analyses",
+    "requestSent": "Request sent and payment confirmed",
+    "requestSentDesc": "Your analysis has been sent to {specialistName} and the payment of {priceUsdt} USDT has been deposited in escrow. You will receive the second opinion within the indicated time (e.g. 24–48 h). Payment will be released to the specialist 24 hours after they submit their report.",
+    "paymentTxLabel": "USDT payment transaction (not the 2 NEAR activation tx):",
+    "sendAnalysesDesc": "Choose a saved analysis to send to {specialistName}. The review cost is",
+    "checkingBalance": "Checking balance...",
+    "yourBalance": "Your balance:",
+    "insufficient": "(insufficient)",
+    "couldNotVerifyBalance": "Could not verify balance",
+    "payAndRequest": "Pay {priceUsdt} USDT and request second opinion",
+    "sending": "Sending…",
+    "viewAllMyAnalyses": "View all my analyses",
+    "paymentNote": "Payment will be processed via meta-transaction (gasless). The specialist will receive payment 24 hours after submitting their report.",
+    "fileNotInIDB": "File is not in IndexedDB (it may have been generated on another device)",
+    "errorPreview": "Error previewing:",
+    "noWallet": "Please connect your wallet to continue.",
+    "nearNotReady": "NEAR wallet not ready. Please wait a moment and try again.",
+    "couldNotGetDocument": "Could not get the document (PDF) to send. Please try again or generate a new analysis.",
+    "couldNotCreateConsultation": "Could not create the consultation. Please try again.",
+    "paymentProcessFailed": "Could not process payment. Please try again.",
+    "paymentProcessedConfirmFailed": "Payment processed but could not be confirmed. Contact support.",
+    "unexpectedError": "An unexpected error occurred. Please try again.",
+    "previewIDB": "View PDF from IndexedDB (Local test)"
+  },
+  "errors": {
+    "transactionFailed": "The transaction did not execute correctly.",
+    "paymentNotVerified": "Transaction not verified on the network. Payment could not be confirmed."
+  },
+  "status": {
+    "allOperational": "All services are operational",
+    "degraded": "Required services OK; some optional services not configured",
+    "unhealthy": "Some required services have errors or are not configured",
+    "errorLoading": "Error loading status",
+    "retry": "Retry",
+    "backToHome": "Back to home"
   }
 }

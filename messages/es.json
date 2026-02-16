@@ -156,7 +156,14 @@
     "additionalInfoPdf": "Información adicional:",
     "errorGenerating": "Error al generar la recomendación",
     "unknownType": "Tipo desconocido",
-    "unknownError": "Error desconocido al analizar"
+    "unknownError": "Error desconocido al analizar",
+    "nearAiTitle": "Análisis con NEAR AI",
+    "nearAiDesc": "Analiza el documento extraído usando inteligencia artificial",
+    "analyzingNear": "Analizando...",
+    "analyzeButton": "Analizar con NEAR AI",
+    "sendingToNear": "Enviando documento a NEAR AI...",
+    "analysisComplete": "Análisis completado",
+    "errorLabel": "Error"
   },
   "stepSecondOpinion": {
     "title": "Solicitar segunda opinión",
@@ -168,7 +175,9 @@
     "analisisPage": "Análisis",
     "otherActions": "Otras acciones",
     "backToReport": "Volver al pronóstico",
-    "startOver": "Empezar de nuevo"
+    "startOver": "Empezar de nuevo",
+    "fileNotFoundIDB": "No se encontró el archivo en IndexedDB",
+    "errorAccessingIDB": "Error al acceder a IndexedDB"
   },
   "analisis": {
     "title": "Tus análisis",
@@ -189,7 +198,31 @@
     "confirmClearAll": "¿Borrar todos los análisis? Esta acción no se puede deshacer.",
     "noAnalysesYet": "Aún no hay análisis",
     "noAnalysesHint": "Sube tus estudios en Veridoc, completa el wizard y solicita segunda opinión para que aquí aparezcan.",
-    "goToWizard": "Ir al wizard"
+    "goToWizard": "Ir al wizard",
+    "tabLocal": "Análisis Locales",
+    "tabConsultations": "Solicitudes Enviadas",
+    "tabSpecialist": "Dictámenes Pendientes",
+    "loadingConsultations": "Cargando consultas de la red...",
+    "loadingDictamenes": "Cargando dictámenes...",
+    "noRequestsTitle": "No hay solicitudes de segunda opinión",
+    "noRequestsHint": "Cuando elijas a un especialista del Marketplace para revisar tus análisis, aparecerán aquí.",
+    "goToMarketplace": "Ir al Marketplace",
+    "noDictamenesTitle": "No tienes dictámenes asignados",
+    "noDictamenesHint": "Aquí aparecerán las solicitudes de pacientes que elijan tu perfil para una segunda opinión.",
+    "statusPending": "Pendiente",
+    "statusCompleted": "Completado",
+    "statusRejected": "Rechazado",
+    "consultationRequestTitle": "Solicitud de Consulta",
+    "viewAnalysis": "Ver análisis",
+    "specialistLabel": "Especialista:",
+    "closeDetail": "Cerrar detalle",
+    "viewDetailsAndComments": "Ver detalles y comentarios",
+    "patientSummaryTitle": "Resumen del Paciente (IA)",
+    "noAdditionalComments": "Sin comentarios adicionales.",
+    "specialistResponseTitle": "Respuesta del Especialista",
+    "waitingSpecialistResponse": "Esperando respuesta del especialista...",
+    "dictaminarButton": "Dictaminar",
+    "waitingPayment": "Esperando confirmación de pago"
   },
   "homeLogin": {
     "goToProfile": "Ir a tu perfil",
@@ -198,7 +231,9 @@
     "chooseLogin": "Elegir método de inicio de sesión",
     "signedIn": "Conectado",
     "loginFailed": "Error al iniciar sesión",
-    "googleLoginFailed": "Error al iniciar sesión con Google"
+    "googleLoginFailed": "Error al iniciar sesión con Google",
+    "retryNearWallet": "Reintentar wallet NEAR",
+    "creatingNearWallet": "Creando wallet NEAR…"
   },
   "marketplace": {
     "badge": "Segunda opinión sobre análisis de sangre",
@@ -226,7 +261,13 @@
     "requestSecondOpinion": "Solicitar segunda opinión",
     "availability": "Disponibilidad",
     "license": "Cédula",
-    "degree": "Título"
+    "degree": "Título",
+    "reviews": "reseñas",
+    "yearsOfExperience": "años de experiencia",
+    "licenseDocument": "Cédula / Licencia",
+    "degreeDocument": "Título / Grado",
+    "perPanelReview": "por revisión de panel",
+    "securityNote": "Los datos se envían de forma segura. El especialista solo accede al análisis que tú elijas para esta segunda opinión."
   },
   "profile": {
     "title": "Perfil",
@@ -357,5 +398,46 @@
   "metadata": {
     "title": "Veridoc | Insights privados de IA para análisis de sangre",
     "description": "Sube diagnósticos de sangre y recibe explicaciones de IA de nivel médico sin exponer datos crudos."
+  },
+  "requestSecondOpinion": {
+    "title": "Enviar mis análisis y solicitar segunda opinión",
+    "noAnalysesTitle": "Enviar mis análisis y solicitar segunda opinión",
+    "noAnalysesDesc": "No tienes análisis guardados. Completa el wizard en Veridoc para generar un análisis y luego podrás enviarlo a este especialista.",
+    "goToWizard": "Ir al wizard",
+    "viewMyAnalyses": "Ver mis análisis",
+    "requestSent": "Solicitud enviada y pago confirmado",
+    "requestSentDesc": "Tu análisis ha sido enviado a {specialistName} y el pago de {priceUsdt} USDT ha sido depositado en escrow. Recibirás la segunda opinión en el plazo indicado (p. ej. 24–48 h). El pago se liberará al especialista 24 horas después de que entregue su dictamen.",
+    "paymentTxLabel": "Transacción del pago USDT (no la de 2 NEAR de activación):",
+    "sendAnalysesDesc": "Elige un análisis guardado para enviarlo a {specialistName}. El costo de la revisión es de",
+    "checkingBalance": "Verificando saldo...",
+    "yourBalance": "Tu saldo:",
+    "insufficient": "(insuficiente)",
+    "couldNotVerifyBalance": "No se pudo verificar el saldo",
+    "payAndRequest": "Pagar {priceUsdt} USDT y solicitar segunda opinión",
+    "sending": "Enviando…",
+    "viewAllMyAnalyses": "Ver todos mis análisis",
+    "paymentNote": "El pago se procesará mediante meta-transacción (gasless). El especialista recibirá el pago 24 horas después de entregar su dictamen.",
+    "fileNotInIDB": "El archivo no está en IndexedDB (tal vez se generó en otro dispositivo)",
+    "errorPreview": "Error al previsualizar:",
+    "noWallet": "Conecta tu wallet para continuar.",
+    "nearNotReady": "La wallet NEAR no está lista. Espera un momento e intenta de nuevo.",
+    "couldNotGetDocument": "No se pudo obtener el documento (PDF) para enviar. Por favor, intenta de nuevo o genera un nuevo análisis.",
+    "couldNotCreateConsultation": "No se pudo crear la consulta. Intenta de nuevo.",
+    "paymentProcessFailed": "No se pudo procesar el pago. Intenta de nuevo.",
+    "paymentProcessedConfirmFailed": "Pago procesado pero no se pudo confirmar. Contacta soporte.",
+    "unexpectedError": "Ha ocurrido un error inesperado. Por favor intenta de nuevo.",
+    "previewIDB": "Ver PDF desde IndexedDB (Prueba local)"
+  },
+  "errors": {
+    "transactionFailed": "La transacción no se ejecutó correctamente.",
+    "paymentNotVerified": "Transacción no verificada en la red. El pago no pudo confirmarse."
+  },
+  "status": {
+    "allOperational": "Todos los servicios están operativos",
+    "degraded": "Servicios requeridos OK; algunos opcionales sin configurar",
+    "unhealthy": "Hay servicios requeridos con error o sin configurar",
+    "errorLoading": "Error al cargar el estado",
+    "retry": "Reintentar",
+    "backToHome": "Volver al inicio"
   }
 }

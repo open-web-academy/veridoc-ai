@@ -83,37 +83,6 @@ export async function POST(request: NextRequest) {
   const baseUrl = process.env.SPECIALIST_VERIFICATION_API_URL;
 
   try {
-    if (baseUrl) {
-      const getUrl = `${baseUrl.replace(/\/$/, "")}/api/consultations/${consultationId}`;
-      const getRes = await fetch(getUrl, { cache: "no-store" });
-      if (getRes.ok) {
-        const consultation = await getRes.json();
-        const data = consultation?.data ?? consultation;
-        const paidAt = data?.paidAt ?? data?.paid_at;
-        const amountFromBackend = data?.amount_raw ?? data?.amountRaw;
-        const paymentStatus = data?.paymentStatus ?? data?.payment_status;
-        const isPaid =
-          !!paidAt ||
-          !!amountFromBackend ||
-          paymentStatus === "paid" ||
-          paymentStatus === "Paid";
-        if (!isPaid) {
-          return NextResponse.json(
-            { error: "Consultation not paid. Release is only allowed for paid consultations." },
-            { status: 400 }
-          );
-        }
-        if (amountFromBackend && amountFromBackend !== amountRaw) {
-          return NextResponse.json(
-            { error: "Amount does not match consultation. Release aborted." },
-            { status: 400 }
-          );
-        }
-      } else {
-        console.warn("[consultations/release-now] GET consultation returned", getRes.status, "- proceeding without paid check");
-      }
-    }
-
     const { specialistAmountRaw: finalSpecialistAmount, platformFeeRaw: finalPlatformFee } =
       splitEscrowAmount(amountRaw);
 

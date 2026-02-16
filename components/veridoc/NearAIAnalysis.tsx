@@ -41,10 +41,10 @@ export const NearAIAnalysis = () => {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold text-slate-900">
-            Análisis con NEAR AI
+            {t("nearAiTitle")}
           </h3>
           <p className="mt-1 text-xs text-slate-600">
-            Analiza el documento extraído usando inteligencia artificial
+            {t("nearAiDesc")}
           </p>
         </div>
         <button
@@ -56,10 +56,10 @@ export const NearAIAnalysis = () => {
           {isLoading ? (
             <>
               <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-              Analizando...
+              {t("analyzingNear")}
             </>
           ) : (
-            "Analizar con NEAR AI"
+            t("analyzeButton")
           )}
         </button>
       </div>
@@ -69,7 +69,7 @@ export const NearAIAnalysis = () => {
         <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-700">
           <div className="flex items-center gap-2">
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"></div>
-            <span>Enviando documento a NEAR AI...</span>
+            <span>{t("sendingToNear")}</span>
           </div>
         </div>
       )}
@@ -78,7 +78,7 @@ export const NearAIAnalysis = () => {
       {result?.success && result.content && (
         <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3">
           <p className="mb-2 text-xs font-semibold text-green-800">
-            ✅ Análisis completado
+            ✅ {t("analysisComplete")}
           </p>
           <div className="max-h-96 overflow-auto rounded-lg bg-white p-3 text-sm text-slate-700">
             <pre className="whitespace-pre-wrap font-sans">
@@ -91,7 +91,7 @@ export const NearAIAnalysis = () => {
       {/* Error */}
       {result && !result.success && result.error && (
         <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-          <p className="font-semibold">❌ Error</p>
+          <p className="font-semibold">❌ {t("errorLabel")}</p>
           <p className="mt-1 text-xs">{result.error}</p>
         </div>
       )}
