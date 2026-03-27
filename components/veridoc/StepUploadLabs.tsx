@@ -216,7 +216,10 @@ export const StepUploadLabs = ({
           <p className="mt-2 text-xs text-slate-500">{t("or")}</p>
           <button
             type="button"
-            onClick={handleBrowse}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleBrowse();
+            }}
             className="mt-3 inline-flex h-11 items-center justify-center rounded-full border border-slate-200 bg-white px-5 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
           >
             {t("browse")}

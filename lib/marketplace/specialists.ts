@@ -45,6 +45,8 @@ type ApiSpecialist = {
   privyWallet?: string;
   licenseDocumentUrl?: string;
   degreeDocumentUrl?: string;
+  biography?: string;
+  nearAddress?: string;
   [key: string]: unknown;
 };
 
